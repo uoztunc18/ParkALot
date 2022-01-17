@@ -20,6 +20,7 @@ class HomePageViewController: UIViewController {
 
         // Do any additional setup after loading the view.
         self.title = "Home Page"
+        
         //Lag temp solution
         
         let userDefaults = UserDefaults.standard

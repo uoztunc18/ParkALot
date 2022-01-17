@@ -18,9 +18,10 @@ class ParkingLotListViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        self.title = "Parking Lots"
         if let selectedDistrict = selectedDistrict {
             self.title = "Parking Lots In \(selectedDistrict)"
+        } else {
+            self.title = "Parking Lots"
         }
         //LAG TEMP SOLUTION
 //        dataSource.loadParkingLots()
@@ -66,33 +67,28 @@ extension ParkingLotListViewController: UICollectionViewDataSource {
         
         if let selectedDistrict = self.selectedDistrict {
             self.dataSource.getListOfParkingLotsINTheDistrict(district: selectedDistrict)
-            
-            let parkingLot = self.dataSource.parkingLotList[indexPath.row]
-            
-            cell.parkName.text = parkingLot.parkName
-            cell.districtName.text = parkingLot.district
-            cell.freeLotNumber.text = "\(parkingLot.emptyCapacity)"
-            cell.status.text = "\(parkingLot.isOpen)"
-    
-            cell.detailButton.tag = indexPath.row
-            if parkingLot.isOpen != 1 {
-                cell.detailButton.isEnabled = false
-            }
-            
-        } else {
-            let parkingLot = self.dataSource.parkingLotList[indexPath.row]
-            
-            cell.parkName.text = parkingLot.parkName
-            cell.districtName.text = parkingLot.district
-            cell.freeLotNumber.text = "\(parkingLot.emptyCapacity)"
-            cell.status.text = "\(parkingLot.isOpen)"
-            
-            cell.detailButton.setTitle("Detail", for: .normal)
-            cell.detailButton.tag = indexPath.row
-            if parkingLot.isOpen != 1 {
-                cell.detailButton.isEnabled = false
-            }
         }
+        
+        let parkingLot = self.dataSource.parkingLotList[indexPath.row]
+        
+        cell.parkName.text = parkingLot.parkName
+        cell.districtName.text = parkingLot.district
+        cell.freeLotNumber.text = "\(parkingLot.emptyCapacity)"
+        cell.detailButton.tag = indexPath.row
+        
+        if parkingLot.isOpen != 1 {
+            cell.detailButton.isEnabled = false
+            cell.status.text = "Closed"
+            cell.backgroundColor = UIColor.lightGray
+        } else if parkingLot.isOpenNow() == false {
+            let workTimes = parkingLot.convertToTime(str: parkingLot.workHours, calendar: Calendar.current)
+            cell.status.text = "Opens at \(String(format: "%02d", workTimes.0.hour!)):\(String(format: "%02d", workTimes.0.minute!))"
+            cell.backgroundColor = UIColor.systemPink
+        } else {
+            cell.backgroundColor = UIColor.systemGreen
+            cell.status.text = "Open!"
+        }
+        
         
         return cell
     }
