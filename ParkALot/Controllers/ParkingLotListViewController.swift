@@ -18,10 +18,20 @@ class ParkingLotListViewController: UIViewController {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
-        dataSource.loadParkingLots()
-        sleep(1)
-        dataSource.loadDistricts()
+        self.title = "Parking Lots"
+        if let selectedDistrict = selectedDistrict {
+            self.title = "Parking Lots In \(selectedDistrict)"
+        }
+        //LAG TEMP SOLUTION
+//        dataSource.loadParkingLots()
+//        sleep(10)
+//        dataSource.loadDistricts()
+        //LAG TEMP SOLUTION
     }
+    
+//    override func viewDidDisappear(_ animated: Bool) {
+//        self.selectedDistrict = nil
+//    }
     
 
     /*
@@ -63,7 +73,7 @@ extension ParkingLotListViewController: UICollectionViewDataSource {
             cell.districtName.text = parkingLot.district
             cell.freeLotNumber.text = "\(parkingLot.emptyCapacity)"
             cell.status.text = "\(parkingLot.isOpen)"
-            
+    
             cell.detailButton.tag = indexPath.row
             if parkingLot.isOpen != 1 {
                 cell.detailButton.isEnabled = false
@@ -77,6 +87,7 @@ extension ParkingLotListViewController: UICollectionViewDataSource {
             cell.freeLotNumber.text = "\(parkingLot.emptyCapacity)"
             cell.status.text = "\(parkingLot.isOpen)"
             
+            cell.detailButton.setTitle("Detail", for: .normal)
             cell.detailButton.tag = indexPath.row
             if parkingLot.isOpen != 1 {
                 cell.detailButton.isEnabled = false

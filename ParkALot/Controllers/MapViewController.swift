@@ -6,13 +6,33 @@
 //
 
 import UIKit
+import MapKit
 
 class MapViewController: UIViewController {
 
+    @IBOutlet weak var map: MKMapView!
+    
+    var parkingLot : ParkingLot?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        
+        self.title = "Location"
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        if let parkingLot = self.parkingLot {
+            let coordinate = CLLocationCoordinate2D(latitude: Double(parkingLot.lat)!, longitude: Double(parkingLot.lng)!)
+            let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 2000, longitudinalMeters: 2000)
+            let annotation = MKPointAnnotation()
+            annotation.coordinate = coordinate
+            annotation.title = parkingLot.parkName
+            self.map.setRegion(region, animated: true)
+            self.map.addAnnotation(annotation)
+        }
+        
     }
     
 

@@ -15,14 +15,17 @@ class DistrictListViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         // Do any additional setup after loading the view.
-        dataSource.loadParkingLots()
-        sleep(1)
-        dataSource.loadDistricts()
-        print(dataSource.parkingLotList.count)
-        print(dataSource.districtList.count)
-        print(dataSource.districtList)
+        self.title = "Districts"
+        //LAG TEMP SOLUTION
+//        dataSource.loadParkingLots()
+//        sleep(10)
+//        dataSource.loadDistricts()
+//        print(dataSource.parkingLotList.count)
+//        print(dataSource.districtList.count)
+//        print(dataSource.districtList)
+        //LAG TEMP SOLUTION
     }
     
 
@@ -41,7 +44,11 @@ class DistrictListViewController: UIViewController {
         if let indexPath = self.districtTable.indexPath(for: cell) {
             let selectedDistrict = self.dataSource.districtList[indexPath.row]
             let parkingLotListViewController = segue.destination as! ParkingLotListViewController
+//            parkingLotListViewController.dataSource = self.dataSource @@@@@
+            //LAG TEMP SOLUTION
+            parkingLotListViewController.dataSource = self.dataSource.copy()
             parkingLotListViewController.selectedDistrict = selectedDistrict
+            //LAG TEMP SOLUTION
         }
     }
 

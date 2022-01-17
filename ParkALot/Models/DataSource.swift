@@ -68,6 +68,11 @@ class DataSource {
                 let decoder = JSONDecoder()
                 if let data = data {
                     let parkingLotListLoading = try! decoder.decode([ParkingLot].self, from: data)
+                    //LAG TEMP SOLUTION
+                    print("ffffff")
+                    let userDefaults = UserDefaults.standard
+                    userDefaults.setValue(data, forKey: "CachedData")
+                    //LAG TEMP SOLUTION
                     self.parkingLotList = parkingLotListLoading
                     DispatchQueue.main.async {
 //                        self.loadDistricts()
@@ -103,4 +108,13 @@ class DataSource {
 //            dataTask.resume()
 //        }
 //    }
+    
+    func copy() -> DataSource {
+        
+        let copy = DataSource()
+        copy.districtList = self.districtList
+        copy.parkingLotList = self.parkingLotList
+        
+        return copy
+    }
 }
