@@ -12,6 +12,4 @@ class ParkingLotCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var districtName: UILabel!
     @IBOutlet weak var freeLotNumber: UILabel!
     @IBOutlet weak var status: UILabel!
-    
-    @IBOutlet weak var detailButton: UIButton!
 }

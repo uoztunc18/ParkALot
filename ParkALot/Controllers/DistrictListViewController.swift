@@ -18,6 +18,15 @@ class DistrictListViewController: UIViewController {
         
         // Do any additional setup after loading the view.
         self.title = "Districts"
+        
+        self.dataSource.delegate = self
+        let userDefaults = UserDefaults.standard
+        if let districts = userDefaults.object(forKey: "Districts8") {
+            self.dataSource.districtList = districts as! [String]
+        } else {
+            self.dataSource.loadParkingLots()
+        }
+        
         //LAG TEMP SOLUTION
 //        dataSource.loadParkingLots()
 //        sleep(10)
@@ -44,11 +53,8 @@ class DistrictListViewController: UIViewController {
         if let indexPath = self.districtTable.indexPath(for: cell) {
             let selectedDistrict = self.dataSource.districtList[indexPath.row]
             let parkingLotListViewController = segue.destination as! ParkingLotListViewController
-//            parkingLotListViewController.dataSource = self.dataSource @@@@@
-            //LAG TEMP SOLUTION
             parkingLotListViewController.dataSource = self.dataSource.copy()
-            parkingLotListViewController.selectedDistrict = selectedDistrict
-            //LAG TEMP SOLUTION
+            parkingLotListViewController.dataSource.selectedDistrict = selectedDistrict
         }
     }
 
@@ -65,6 +71,24 @@ extension DistrictListViewController: UITableViewDataSource {
         
         cell.districtLabel.text = district
         
+        cell.layer.cornerRadius = 10
+        let shadowPath2 = UIBezierPath(rect: cell.bounds)
+        cell.layer.masksToBounds = false
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOffset = CGSize(width: CGFloat(1.0), height: CGFloat(3.0))
+        cell.layer.shadowOpacity = 0.5
+        cell.layer.shadowPath = shadowPath2.cgPath
+        
         return cell
+    }
+}
+
+extension DistrictListViewController : DataSourceProtocol{
+    func loadData() {
+        self.dataSource.loadDistricts()
+    }
+    
+    func loadDistricts() {
+        self.districtTable.reloadData()
     }
 }

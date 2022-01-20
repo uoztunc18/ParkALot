@@ -10,9 +10,10 @@ import Foundation
 class DataSource {
     var parkingLotList : [ParkingLot] = []
     var districtList : [String] = []
-//    var parkingLot : ParkingLot?
+    var parkingLot : ParkingLot?
+    var selectedDistrict : String?
     
-//    var delegate : DataSourceDelegate?
+    var delegate : DataSourceProtocol?
     
     let baseUrl = "https://api.ibb.gov.tr/ispark/Park"
     
@@ -27,24 +28,24 @@ class DataSource {
         return districtList.count
     }
     
-    func getNumberOfParkingLotInTheDistrict(district : String) -> Int {
+    func getNumberOfParkingLotsInTheDistrict(selectedDistrict : String) -> Int {
         var count = 0
-        
-        for lot in self.parkingLotList {
-            if lot.district.elementsEqual(district) {
+        for parkingLot in self.parkingLotList {
+            let district = parkingLot.getDistrict()
+            if district.elementsEqual(selectedDistrict) {
                 count += 1
             }
         }
-        
         return count
     }
     
-    func getListOfParkingLotsINTheDistrict(district : String) {
+    func setListOfParkingLotsInTheDistrict(selectedDistrict : String) {
         var list : [ParkingLot] = []
         
-        for lot in self.parkingLotList {
-            if lot.district.elementsEqual(district) {
-                list.append(lot)
+        for parkingLot in self.parkingLotList {
+            let district = parkingLot.getDistrict()
+            if district.elementsEqual(selectedDistrict) {
+                list.append(parkingLot)
             }
         }
         
@@ -68,14 +69,9 @@ class DataSource {
                 let decoder = JSONDecoder()
                 if let data = data {
                     let parkingLotListLoading = try! decoder.decode([ParkingLot].self, from: data)
-                    //LAG TEMP SOLUTION
-                    print("ffffff")
-                    let userDefaults = UserDefaults.standard
-                    userDefaults.setValue(data, forKey: "CachedData")
-                    //LAG TEMP SOLUTION
                     self.parkingLotList = parkingLotListLoading
                     DispatchQueue.main.async {
-//                        self.loadDistricts()
+                        self.delegate?.loadData()
                     }
                 }
             }
@@ -84,30 +80,18 @@ class DataSource {
     }
     
     func loadDistricts() {
-        for i in self.parkingLotList {
-            if self.districtList.contains(i.district) == false {
-                self.districtList.append(i.district)
+        for parkingLot in self.parkingLotList {
+            let district = parkingLot.getDistrict()
+            if self.districtList.contains(district) == false {
+                self.districtList.append(district)
             }
         }
+        self.districtList = self.districtList.sorted()
+        let userDefaults = UserDefaults.standard
+        userDefaults.setValue(self.districtList, forKey: "Districts8")
+        
+        self.delegate?.loadDistricts()
     }
-    
-//    func loadPharmacyDetail(pharmacyId : String) {
-//        if let url = URL(string: "\(baseUrl)/pharmacy/\(pharmacyId)") {
-//            var urlRequest = URLRequest(url: url)
-//            urlRequest.httpMethod = "GET"
-//            urlRequest.addValue("application/JSON", forHTTPHeaderField: "Content-Type")
-//            let dataTask = URLSession.shared.dataTask(with: urlRequest) { data, request, error in
-//                let decoder = JSONDecoder()
-//                if let data = data {
-//                    let pharmacyLoading = try! decoder.decode(PharmacyDetail.self, from: data)
-//                    self.pharmacy = pharmacyLoading
-//                    DispatchQueue.main.async {
-//                        self.delegate?.detailLoaded(pharmacy: pharmacyLoading)                    }
-//                }
-//            }
-//            dataTask.resume()
-//        }
-//    }
     
     func copy() -> DataSource {
         
