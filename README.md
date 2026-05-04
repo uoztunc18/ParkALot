@@ -1,6 +1,6 @@
 # 🚗 ParkALot
 
-ParkALot is an iOS application built with **Swift** and **Firebase** that helps users explore and manage parking information in Istanbul. Users can browse parking lots by district, view detailed availability information, and explore locations on an interactive map.
+ParkALot is an iOS application built with **Swift** and **Firebase** that helps users explore and manage parking information in Istanbul. Users can browse parking lots by district, view detailed availability information live from IBB API, and explore locations on an interactive map.
 
 ---
 
